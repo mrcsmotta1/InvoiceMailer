@@ -5,6 +5,7 @@ RUN apk --no-cache add linux-headers
 RUN apk add --no-cache \
     $PHPIZE_DEPS
 
+COPY 90-xdebug.ini "${PHP_INI_DIR}/conf.d"
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 
@@ -14,5 +15,9 @@ RUN apk --no-cache add pcre-dev ${PHPIZE_DEPS} \
   && docker-php-ext-enable redis \
   && apk del pcre-dev ${PHPIZE_DEPS}
 
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 COPY . /app
+
 RUN chown -R www-data:www-data /app/storage
+
