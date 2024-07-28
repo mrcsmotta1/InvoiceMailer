@@ -1,23 +1,34 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.2-fpm
 
-RUN apk --no-cache add linux-headers
+RUN apt-get update && apt-get install -y \
+  git \
+  curl \
+  libpng-dev \
+  libonig-dev \
+  libxml2-dev \
+  zip \
+  unzip
 
-RUN apk add --no-cache \
-    $PHPIZE_DEPS
+  # Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
 
 COPY 90-xdebug.ini "${PHP_INI_DIR}/conf.d"
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 
-RUN docker-php-ext-install pdo_mysql
-RUN apk --no-cache add pcre-dev ${PHPIZE_DEPS} \
-  && pecl install redis \
-  && docker-php-ext-enable redis \
-  && apk del pcre-dev ${PHPIZE_DEPS}
+# Install redis
+RUN pecl install -o -f redis \
+    &&  rm -rf /tmp/pear \
+    &&  docker-php-ext-enable redis
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 COPY . /app
 
 RUN chown -R www-data:www-data /app/storage
+
+EXPOSE 9000
 
