@@ -11,6 +11,7 @@ class DirectoryHelper
     {
         $directoryPath = storage_path('app/public/import');
         $destinationDirectory = storage_path('app/public/processed');
+        $fileError = storage_path('app/public/error');
 
         if (!File::exists($directoryPath)) {
             File::makeDirectory($directoryPath);
@@ -23,6 +24,12 @@ class DirectoryHelper
             File::makeDirectory($destinationDirectory);
             chmod($destinationDirectory, 0777);
             Log::info("Criado diretorio de arquivos processados {$destinationDirectory} com sucesso, " . " Class: " . $class . " Function: " . $function . " Line: ". __line__);
+        }
+
+        if (!File::exists($fileError)) {
+            File::makeDirectory($fileError);
+            chmod($fileError, 0777);
+            Log::info("Criado diretorio de arquivos com erro {$fileError} com sucesso, " . " Class: " . $class . " Function: " . $function . " Line: ". __line__);
         }
     }
 }
