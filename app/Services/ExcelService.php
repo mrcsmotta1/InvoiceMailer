@@ -6,6 +6,8 @@ use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
+use function PHPUnit\Framework\isNull;
+
 class ExcelService
 {
     const XLSX = "xlsx";
@@ -37,7 +39,7 @@ class ExcelService
         }
 
         foreach ($data as $row) {
-            if (!empty($row)) {
+            if (!empty(array_filter($row))) {
                 $row[4] = trim(str_replace('R$', '', $row['4']));
                 $dados[] = array_combine($header, $row);
             }
