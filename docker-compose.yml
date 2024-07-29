@@ -12,8 +12,6 @@ services:
     depends_on:
       - database
       - cache
-    networks:
-      - laravel
   web:
     image: nginx:1.25
     ports:
@@ -23,8 +21,6 @@ services:
       - ./storage/app/public:/app/public/storage
     depends_on:
       - app
-    networks:
-      - laravel
   database:
     image: mysql:8
     environment:
@@ -36,20 +32,11 @@ services:
       - "3306:3306"
     volumes:
       - ./infra/mysql:/var/lib/mysql
-    networks:
-      - laravel
   mailpit:
     image: axllent/mailpit:v1.6.13
     ports:
       - "1025:1025"
       - "8025:8025"
-    networks:
-      - laravel
   cache:
     image: redis:7
-    networks:
-      - laravel
 
-networks:
-  laravel:
-    driver: bridge

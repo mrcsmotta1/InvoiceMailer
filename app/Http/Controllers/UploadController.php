@@ -7,14 +7,16 @@ use App\Services\ExcelService;
 use App\Utilities\DirectoryHelper;
 use App\Http\Requests\StoreUploadRequest;
 use App\Repositories\EloquentInvoiceRepository;
-
-
+use App\Services\SendBarcodeMail;
 
 class UploadController extends Controller
 {
     public $arrayData;
-    public function __construct(private ExcelService $excelService, private EloquentInvoiceRepository $invoiceRepository)
-    {
+    public function __construct(
+        private ExcelService $excelService,
+        private EloquentInvoiceRepository $invoiceRepository,
+        private SendBarcodeMail $sendBarcodeMail
+    ) {
         $this->arrayData = [];
     }
     public function index()
@@ -38,6 +40,8 @@ class UploadController extends Controller
         }
 
         $this->invoiceRepository->add($this->arrayData);
+
+        $this->sendBarcodeMail->sendEmail($this->arrayData, $request);
 
         FileHelper::moveAndDeleteFile($filePath, $fileName, __CLASS__, __FUNCTION__);
 

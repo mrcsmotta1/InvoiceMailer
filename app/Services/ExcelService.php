@@ -38,7 +38,7 @@ class ExcelService
 
         foreach ($data as $row) {
             if (!empty($row)) {
-                $row[4] = floatval(str_replace(['R$', ',', '.'], '', $row['4']));
+                $row[4] = trim(str_replace('R$', '', $row['4']));
                 $dados[] = array_combine($header, $row);
             }
         }
