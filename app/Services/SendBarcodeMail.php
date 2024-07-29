@@ -34,7 +34,7 @@ class SendBarcodeMail
                 $barcode,
                 $qrCode,
             );
-            Mail::to($value['email'])->send($email);
+            Mail::to($value['email'])->queue($email);
         }
     }
 
