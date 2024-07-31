@@ -29,6 +29,7 @@ class StoreUploadRequest extends FormRequest
     {
         return [
             'excel_file.required' => 'Por favor, selecione um arquivo com extensão: xls, xlsx ou csv para upload.',
+            'excel_file.mimes' => 'O arquivo deve ter uma extensão válida: xls, xlsx ou csv.',
 
         ];
     }
